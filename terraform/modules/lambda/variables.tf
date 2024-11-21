@@ -13,21 +13,6 @@ variable "current_aws_account_id" {
   type        = string
 }
 
-variable "dynamodb_banking_entities_table_arn" {
-  description = "The ARN of the DynamoDB banking entities table the Lambda will interact with"
-  type        = string
-
-  validation {
-    condition     = can(regex("^arn:aws:dynamodb:[a-z0-9-]+:[0-9]{12}:table/.+", var.dynamodb_banking_entities_table_arn))
-    error_message = "The value for dynamodb_table_arn must be a valid DynamoDB table ARN."
-  }
-}
-
-variable "dynamodb_banking_entities_table_name" {
-  description = "The name of the DynamoDB banking entities table the Lambda will interact with"
-  type        = string
-}
-
 variable "sns_bank_account_created_topic_name" {
   description = "The name of the SNS bank account created topic the Lambda will interact with"
   type        = string
@@ -35,6 +20,11 @@ variable "sns_bank_account_created_topic_name" {
 
 variable "sns_bank_account_created_topic_arn" {
   description = "The ARN of the SNS bank account created topic the Lambda will interact with"
+  type        = string
+}
+
+variable "sqs_card_application_queue_url" {
+  description = "The URL of the SQS card application queue the Lambda will interact with"
   type        = string
 }
 

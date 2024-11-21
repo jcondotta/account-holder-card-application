@@ -21,10 +21,11 @@ public interface LocalStackTestContainer extends TestPropertyProvider {
     DockerImageName LOCALSTACK_IMAGE = DockerImageName.parse(LOCAL_STACK_IMAGE_NAME);
 
     LocalStackContainer LOCALSTACK_CONTAINER = new LocalStackContainer(LOCALSTACK_IMAGE)
-            .withServices(Service.DYNAMODB, Service.SNS, Service.SQS)
+            .withServices(Service.SNS, Service.SQS)
             .withLogConsumer(outputFrame -> LOGGER.debug(outputFrame.getUtf8StringWithoutLineEnding()));
 
-    String SNS_BANK_ACCOUNT_CREATED_TOPIC_ARN = "bank-account-created-topic-test";
+    String SNS_BANK_ACCOUNT_CREATED_TOPIC_NAME = "bank-account-created-topic-test";
+    String SQS_CARD_APPLICATION_QUEUE_NAME = "card-application-queue-test";
 
     @Override
     default Map<String, String> getProperties() {
@@ -37,10 +38,12 @@ public interface LocalStackTestContainer extends TestPropertyProvider {
             throw new RuntimeException("Failed to start LocalStack container", e);
         }
 
-        var snsTopicARN = LocalStackSNSTopicCreator.createSNSTopicWithARNResponse(SNS_BANK_ACCOUNT_CREATED_TOPIC_ARN);
+        var snsTopicARN = LocalStackSNSTopicCreator.createSNSTopicWithARNResponse(SNS_BANK_ACCOUNT_CREATED_TOPIC_NAME);
+        var sqsQueueURL = LocalStackSQSQueueCreator.createQueueWithURLResponse(SQS_CARD_APPLICATION_QUEUE_NAME);
 
         Map<String, String> containerProperties = getContainerProperties();
         containerProperties.put("AWS_SNS_BANK_ACCOUNT_CREATED_TOPIC_ARN", snsTopicARN);
+        containerProperties.put("AWS_SQS_CARD_APPLICATION_QUEUE_URL", sqsQueueURL);
 
         logContainerConfiguration(containerProperties);
 
@@ -52,7 +55,6 @@ public interface LocalStackTestContainer extends TestPropertyProvider {
                 Map.entry("AWS_ACCESS_KEY_ID", LOCALSTACK_CONTAINER.getAccessKey()),
                 Map.entry("AWS_SECRET_ACCESS_KEY", LOCALSTACK_CONTAINER.getSecretKey()),
                 Map.entry("AWS_DEFAULT_REGION", LOCALSTACK_CONTAINER.getRegion()),
-                Map.entry("AWS_DYNAMODB_ENDPOINT", LOCALSTACK_CONTAINER.getEndpointOverride(Service.DYNAMODB).toString()),
                 Map.entry("AWS_SNS_ENDPOINT", LOCALSTACK_CONTAINER.getEndpointOverride(Service.SNS).toString()),
                 Map.entry("AWS_SQS_ENDPOINT", LOCALSTACK_CONTAINER.getEndpointOverride(Service.SQS).toString())
         );

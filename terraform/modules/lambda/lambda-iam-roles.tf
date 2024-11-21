@@ -1,5 +1,4 @@
-# Define the IAM Role for the Lambda function
-resource "aws_iam_role" "bank_accounts_lambda_role_exec" {
+resource "aws_iam_role" "account_holder_card_application_lambda_role_exec" {
   name = "${var.lambda_function_name}-exec-role"
   assume_role_policy = jsonencode(
     {
@@ -18,7 +17,7 @@ resource "aws_iam_role" "bank_accounts_lambda_role_exec" {
 
 resource "aws_iam_role_policy" "lambda_policy" {
   name = "${var.lambda_function_name}-policy"
-  role = aws_iam_role.bank_accounts_lambda_role_exec.id
+  role = aws_iam_role.account_holder_card_application_lambda_role_exec.id
   policy = jsonencode(
     {
       "Version" : "2012-10-17",
@@ -37,22 +36,17 @@ resource "aws_iam_role_policy" "lambda_policy" {
           "Resource" : "arn:aws:logs:${var.aws_region}:${var.current_aws_account_id}:log-group:/aws/lambda/${var.lambda_function_name}:*"
         },
         {
-          "Action" : [
-            "dynamodb:PutItem",
-            "dynamodb:DeleteItem",
-            "dynamodb:GetItem",
-            "dynamodb:Query"
-          ],
-          "Effect" : "Allow",
-          "Resource" : var.dynamodb_banking_entities_table_arn
-        },
-        {
-          Action   = [
-            "sns:ListTopics",
-            "sns:Publish"
-          ],
+          Action   = "sns:Publish",
           Effect   = "Allow",
           Resource = "arn:aws:sns:us-east-1:470315484552:*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "sqs:SendMessage",
+            "sqs:GetQueueUrl"
+          ],
+          "Resource": var.sqs_card_application_queue_arn
         }
       ]
     }

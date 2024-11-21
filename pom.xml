@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.jcondotta</groupId>
-    <artifactId>bank-account-management</artifactId>
+    <artifactId>account-holder-card-application</artifactId>
     <version>0.1</version>
     <packaging>${packaging}</packaging>
 
@@ -37,17 +37,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.micronaut</groupId>
-            <artifactId>micronaut-http-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micronaut</groupId>
-            <artifactId>micronaut-http-server-netty</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>dynamodb-enhanced</artifactId>
-            <version>2.29.0</version>
+            <groupId>io.micronaut.jms</groupId>
+            <artifactId>micronaut-jms-sqs</artifactId>
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
@@ -76,15 +67,6 @@
             <artifactId>micronaut-aws-lambda-events-serde</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.micronaut.openapi</groupId>
-            <artifactId>micronaut-openapi-annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>swagger-ui</artifactId>
-            <version>4.15.5</version> <!-- Use the latest version -->
-        </dependency>
-        <dependency>
             <groupId>io.micronaut.validation</groupId>
             <artifactId>micronaut-validation</artifactId>
         </dependency>
@@ -96,11 +78,6 @@
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.datafaker</groupId>
-            <artifactId>datafaker</artifactId>
-            <version>2.4.0</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -132,11 +109,6 @@
             <groupId>io.micronaut.test</groupId>
             <artifactId>micronaut-test-junit5</artifactId>
             <version>${micronaut-test.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.micronaut.jms</groupId>
-            <artifactId>micronaut-jms-sqs</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -289,7 +261,7 @@
                     </annotationProcessorPaths>
                     <compilerArgs>
                         <arg>-Amicronaut.processing.group=com.jcondotta</arg>
-                        <arg>-Amicronaut.processing.module=bank-account-management</arg>
+                        <arg>-Amicronaut.processing.module=account-holder-card-application</arg>
                         <arg>-Xlint:unchecked</arg>
                     </compilerArgs>
                 </configuration>

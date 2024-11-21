@@ -10,19 +10,8 @@ aws:
   access-key-id: 'test'
   secret-key: 'test'
   region: 'us-east-1'
-  dynamodb:
-    endpoint: ${AWS_DYNAMODB_ENDPOINT}
-    tables:
-      banking-entities:
-        table-name: 'bank-entities-test'
+
   sns:
     endpoint: ${AWS_SNS_ENDPOINT}
-    topics:
-      bank-account-created:
-        topic-name: 'bank-account-created-test'
   sqs:
     endpoint: ${AWS_SQS_ENDPOINT}
-    queues:
-      bank-account-created:
-        queue-name: 'bank-account-created-test'
-
