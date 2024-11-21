@@ -38,7 +38,7 @@ public interface LocalStackTestContainer extends TestPropertyProvider {
             throw new RuntimeException("Failed to start LocalStack container", e);
         }
 
-        var snsTopicARN = LocalStackSNSTopicCreator.createSNSTopicWithARNResponse(SNS_BANK_ACCOUNT_CREATED_TOPIC_NAME);
+        var snsTopicARN = LocalStackSNSTopicCreator.createTopicWithARNResponse(SNS_BANK_ACCOUNT_CREATED_TOPIC_NAME);
         var sqsQueueURL = LocalStackSQSQueueCreator.createQueueWithURLResponse(SQS_CARD_APPLICATION_QUEUE_NAME);
 
         Map<String, String> containerProperties = getContainerProperties();
