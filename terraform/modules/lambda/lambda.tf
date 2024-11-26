@@ -11,7 +11,7 @@ resource "aws_lambda_function" "account_holder_card_application_lambda" {
   environment {
     variables = merge(
       {
-        AWS_SNS_BANK_ACCOUNT_CREATED_TOPIC_ARN = var.sns_bank_account_created_topic_arn
+        AWS_SNS_ACCOUNT_HOLDER_CREATED_TOPIC_ARN = var.sns_bank_account_created_topic_arn
         AWS_SQS_CARD_APPLICATION_QUEUE_URL = var.sqs_card_application_queue_url
       },
       var.lambda_environment_variables

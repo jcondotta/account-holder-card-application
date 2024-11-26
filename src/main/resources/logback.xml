@@ -2,7 +2,7 @@
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>
-                {"timestamp":"%date{ISO8601}","level":"%level","thread":"%thread","logger":"%logger","message":"%msg","bankAccountId":"%X{bankAccountId:-}","accountHolderId":"%X{accountHolderId:-}"}%n
+                {"timestamp":"%date{ISO8601}","level":"%level","thread":"%thread","logger":"%logger","message":"%msg","bankAccountId":"%X{bankAccountId:-}","accountHolderName":"%X{accountHolderName:-}"}%n
             </pattern>
         </encoder>
     </appender>

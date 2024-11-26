@@ -1,9 +1,9 @@
 package com.jcondotta.event;
 
-import com.amazonaws.services.lambda.runtime.events.SNSEvent;
 import com.jcondotta.configuration.CardApplicationSQSQueueConfig;
+import com.jcondotta.event.request.AccountHolderCreatedNotification;
+import com.jcondotta.event.request.CreateCardRequest;
 import com.jcondotta.service.SerializationService;
-import io.micronaut.context.ApplicationContext;
 import io.micronaut.function.aws.MicronautRequestHandler;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -12,12 +12,12 @@ import org.slf4j.MDC;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 
-public class CardApplicationEventHandler extends MicronautRequestHandler<SNSEvent, Void> {
+import java.util.List;
+import java.util.Map;
+
+public class CardApplicationEventHandler extends MicronautRequestHandler<Map<String, Object>, Void> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CardApplicationEventHandler.class);
-
-    @Inject
-    private SqsClient sqsClient;
 
     @Inject
     private CardApplicationSQSQueueConfig sqsQueueConfig;
@@ -25,20 +25,37 @@ public class CardApplicationEventHandler extends MicronautRequestHandler<SNSEven
     @Inject
     private SerializationService serializationService;
 
-    public CardApplicationEventHandler() {
-        super();
-    }
-
-    public CardApplicationEventHandler(ApplicationContext applicationContext) {
-        super(applicationContext);
-    }
+    @Inject
+    private SqsClient sqsClient;
 
     @Override
-    public Void execute(SNSEvent snsEvent) {
-        for (SNSEvent.SNSRecord record : snsEvent.getRecords()) {
-            try {
-                var snsMessage = record.getSNS().getMessage();
-                var notification = serializationService.deserialize(snsMessage, AccountHolderCreatedNotification.class);
+    public Void execute(Map<String, Object> event) {
+        LOGGER.info("Received Event: {}", event);
+
+        try {
+            List<Map<String, Object>> records = (List<Map<String, Object>>) event.get("Records");
+            if (records == null || records.isEmpty()) {
+                LOGGER.error("No records found in event");
+                return null;
+            }
+
+            for (Map<String, Object> record : records) {
+                Map<String, Object> sns = (Map<String, Object>) record.get("Sns");
+                if (sns == null) {
+                    LOGGER.error("No Sns object found in record");
+                    continue;
+                }
+
+                String message = (String) sns.get("Message");
+                if (message == null) {
+                    LOGGER.error("No Message found in Sns object");
+                    continue;
+                }
+
+                LOGGER.info("Processing SNS message: {}", message);
+
+                var notification = serializationService.deserialize(message, AccountHolderCreatedNotification.class);
+                LOGGER.info("Deserialized Notification: {}", notification);
 
                 MDC.put("bankAccountId", notification.bankAccountId().toString());
                 MDC.put("accountHolderName", notification.accountHolderName());
@@ -56,14 +73,12 @@ public class CardApplicationEventHandler extends MicronautRequestHandler<SNSEven
                 sqsClient.sendMessage(sendMessageRequest);
 
                 LOGGER.info("Successfully forwarded message to SQS queue '{}'", sqsQueueConfig.queueURL());
-            } catch (Exception e) {
-//                logger.error("Unexpected error while processing SNS message (MessageId={}): {}",
-//                        record.getSNS().getMessageId(), e.getMessage(), e);
-                throw new RuntimeException("Unexpected error processing SNS message with MessageId: " + record.getSNS().getMessageId(), e);
             }
-            finally {
-                MDC.clear();
-            }
+        } catch (Exception e) {
+            LOGGER.error("Error processing event", e.getMessage());
+        }
+        finally {
+            MDC.clear();
         }
         return null;
     }

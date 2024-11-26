@@ -24,7 +24,7 @@ public interface LocalStackTestContainer extends TestPropertyProvider {
             .withServices(Service.SNS, Service.SQS)
             .withLogConsumer(outputFrame -> LOGGER.debug(outputFrame.getUtf8StringWithoutLineEnding()));
 
-    String SNS_BANK_ACCOUNT_CREATED_TOPIC_NAME = "bank-account-created-topic-test";
+    String SNS_ACCOUNT_HOLDER_CREATED_TOPIC_NAME = "account-holder-created-topic-test";
     String SQS_CARD_APPLICATION_QUEUE_NAME = "card-application-queue-test";
 
     @Override
@@ -38,11 +38,11 @@ public interface LocalStackTestContainer extends TestPropertyProvider {
             throw new RuntimeException("Failed to start LocalStack container", e);
         }
 
-        var snsTopicARN = LocalStackSNSTopicCreator.createTopicWithARNResponse(SNS_BANK_ACCOUNT_CREATED_TOPIC_NAME);
+        var snsTopicARN = LocalStackSNSTopicCreator.createTopicWithARNResponse(SNS_ACCOUNT_HOLDER_CREATED_TOPIC_NAME);
         var sqsQueueURL = LocalStackSQSQueueCreator.createQueueWithURLResponse(SQS_CARD_APPLICATION_QUEUE_NAME);
 
         Map<String, String> containerProperties = getContainerProperties();
-        containerProperties.put("AWS_SNS_BANK_ACCOUNT_CREATED_TOPIC_ARN", snsTopicARN);
+        containerProperties.put("AWS_SNS_ACCOUNT_HOLDER_CREATED_TOPIC_ARN", snsTopicARN);
         containerProperties.put("AWS_SQS_CARD_APPLICATION_QUEUE_URL", sqsQueueURL);
 
         logContainerConfiguration(containerProperties);

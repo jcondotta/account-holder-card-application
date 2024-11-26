@@ -1,4 +1,4 @@
-package com.jcondotta.event;
+package com.jcondotta.event.request;
 
 import io.micronaut.serde.annotation.Serdeable;
 

@@ -13,11 +13,6 @@ variable "current_aws_account_id" {
   type        = string
 }
 
-variable "sns_bank_account_created_topic_name" {
-  description = "The name of the SNS bank account created topic the Lambda will interact with"
-  type        = string
-}
-
 variable "sns_bank_account_created_topic_arn" {
   description = "The ARN of the SNS bank account created topic the Lambda will interact with"
   type        = string

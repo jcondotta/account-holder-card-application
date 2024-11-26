@@ -35,19 +35,6 @@ resource "aws_iam_role_policy" "lambda_policy" {
           "Effect" : "Allow",
           "Resource" : "arn:aws:logs:${var.aws_region}:${var.current_aws_account_id}:log-group:/aws/lambda/${var.lambda_function_name}:*"
         },
-        {
-          Action   = "sns:Publish",
-          Effect   = "Allow",
-          Resource = "arn:aws:sns:us-east-1:470315484552:*"
-        },
-        {
-          "Effect": "Allow",
-          "Action": [
-            "sqs:SendMessage",
-            "sqs:GetQueueUrl"
-          ],
-          "Resource": var.sqs_card_application_queue_arn
-        }
       ]
     }
   )

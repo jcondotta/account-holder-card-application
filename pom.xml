@@ -14,7 +14,7 @@
     </parent>
 
     <properties>
-        <exec.mainClass>io.micronaut.function.aws.runtime.MicronautLambdaRuntime</exec.mainClass>
+        <exec.mainClass>com.jcondotta.event.CardApplicationEventHandler</exec.mainClass>
         <packaging>jar</packaging>
         <jdk.version>21</jdk.version>
         <release.version>${jdk.version}</release.version>
@@ -37,8 +37,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.micronaut.jms</groupId>
-            <artifactId>micronaut-jms-sqs</artifactId>
+            <groupId>io.micronaut.aws</groupId>
+            <artifactId>micronaut-function-aws</artifactId>
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
@@ -46,12 +46,13 @@
             <version>2.25.0</version>
         </dependency>
         <dependency>
-            <groupId>io.micronaut.aws</groupId>
-            <artifactId>micronaut-function-aws-api-proxy</artifactId>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sqs</artifactId>
+            <version>2.25.0</version>
         </dependency>
         <dependency>
             <groupId>io.micronaut.aws</groupId>
-            <artifactId>micronaut-function-aws-custom-runtime</artifactId>
+            <artifactId>micronaut-aws-lambda-events-serde</artifactId>
         </dependency>
         <dependency>
             <groupId>io.micronaut.serde</groupId>
@@ -62,10 +63,34 @@
             <artifactId>micronaut-jackson-databind</artifactId>
             <version>4.6.5</version>
         </dependency>
-        <dependency>
-            <groupId>io.micronaut.aws</groupId>
-            <artifactId>micronaut-aws-lambda-events-serde</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.amazonaws</groupId>-->
+<!--            <artifactId>aws-lambda-java-core</artifactId>-->
+<!--            <version>1.2.3</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.amazonaws</groupId>-->
+<!--            <artifactId>aws-lambda-java-events</artifactId>-->
+<!--            <version>3.14.0</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>io.micronaut.jms</groupId>-->
+<!--            <artifactId>micronaut-jms-sqs</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>software.amazon.awssdk</groupId>-->
+<!--            <artifactId>sns</artifactId>-->
+<!--            <version>2.25.0</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>io.micronaut.aws</groupId>-->
+<!--            <artifactId>micronaut-function-aws</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>io.micronaut.aws</groupId>-->
+<!--            <artifactId>micronaut-aws-lambda-events-serde</artifactId>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>io.micronaut.validation</groupId>
             <artifactId>micronaut-validation</artifactId>
@@ -155,17 +180,6 @@
                 <configuration>
                     <configFile>aot-${packaging}.properties</configFile>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>default-cli</id>
-                        <goals>
-                            <goal>docker-native</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>io.micronaut.function.aws.runtime.MicronautLambdaRuntime</mainClass>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
@@ -240,17 +254,6 @@
                             <groupId>io.micronaut.serde</groupId>
                             <artifactId>micronaut-serde-processor</artifactId>
                             <version>${micronaut.serialization.version}</version>
-                            <exclusions>
-                                <exclusion>
-                                    <groupId>io.micronaut</groupId>
-                                    <artifactId>micronaut-inject</artifactId>
-                                </exclusion>
-                            </exclusions>
-                        </path>
-                        <path>
-                            <groupId>io.micronaut.openapi</groupId>
-                            <artifactId>micronaut-openapi</artifactId>
-                            <version>${micronaut.openapi.version}</version>
                             <exclusions>
                                 <exclusion>
                                     <groupId>io.micronaut</groupId>

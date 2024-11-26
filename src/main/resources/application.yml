@@ -1,6 +1,8 @@
 micronaut:
   server:
     port: 8091
+  serialization:
+    enabled: true
 
 aws:
   access-key-id: ${AWS_ACCESS_KEY_ID}
@@ -13,5 +15,5 @@ aws:
 
   sns:
     topics:
-      bank-account-created:
-        topic-arn: ${AWS_SNS_BANK_ACCOUNT_CREATED_TOPIC_ARN}
+      account-holder-created:
+        topic-arn: ${AWS_SNS_ACCOUNT_HOLDER_CREATED_TOPIC_ARN}
